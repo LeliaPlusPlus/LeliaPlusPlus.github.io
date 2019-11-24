@@ -97,6 +97,11 @@ body, html {
   color: white;
 }
 
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+}
+
 body {
     margin: 0;
     font-family: "Muli" sans-serif;
