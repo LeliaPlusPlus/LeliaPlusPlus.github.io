@@ -61,6 +61,10 @@ body, html {
     color: 90C0E8;
 }
 
+#photo {
+    align-items: center;
+}
+
 body {
     margin: 0;
     font-family: "Muli" sans-serif;
