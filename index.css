@@ -92,6 +92,11 @@ body, html {
   color: white;
 }
 
+.fa-github {
+  background: #6e5494;
+  color: white;
+}
+
 body {
     margin: 0;
     font-family: "Muli" sans-serif;
