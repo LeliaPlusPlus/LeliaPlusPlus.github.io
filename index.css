@@ -41,7 +41,8 @@ html {
 .menu {
     width: 100%;
     margin: 1% auto;
-    height: 70px;
+    /*height: 70px;*/
+    height: 45px;
     display: flex;
     flex-direction: row;
     font-family: 'Muli', sans-serif;
