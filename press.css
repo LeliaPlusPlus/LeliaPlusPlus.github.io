@@ -55,7 +55,7 @@ body, html {
     font-family: 'Muli', sans-serif;
 }
 
-#press {
+.press {
     font-weight: bold;
     margin: 8%;
     font-size: 18px;
