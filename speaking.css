@@ -55,11 +55,11 @@ body, html {
     font-family: 'Muli', sans-serif;
 }
 
-#speaking {
+.speaking {
     font-weight: bold;
     margin: 8%;
     font-size: 18px;
-    text-align: justify;
+    text-align: center;
     color: white;
 }
 
