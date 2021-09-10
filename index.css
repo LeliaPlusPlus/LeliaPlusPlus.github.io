@@ -63,11 +63,13 @@ body, html {
     color: white;
 }
 
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+/* Fixed/sticky icon bar (vertically aligned 50% from the top of the screen) */
+.social-media {
+  position: fixed;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .ai {
