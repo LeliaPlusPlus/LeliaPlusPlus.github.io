@@ -55,13 +55,15 @@ body, html {
     font-family: 'Lato', sans-serif;
 }
 
-#blog {
+.blogs {
     font-weight: bold;
     margin: 8%;
     font-size: 18px;
+    padding-left: 80px;
     text-align: justify;
     color: #D22B2B;
 }
+
 
 .social-media {
   display: block;
@@ -105,25 +107,25 @@ body, html {
 
 .fa-twitter {
   /*background: #55ACEE;*/
-  color: white;
+  color: #D22B2B;
 }
 
 .fa-linkedin {
   /*background: #007bb5;*/
-  color: white;
+  color: #D22B2B;
 }
 
 .fa-github {
   /*background: #6e5494;*/
-  color: white;
+  color: #D22B2B;
 }
 
 .fa-youtube {
   /*background: #bb0000;*/
-  color: white;
+  color: #D22B2B;
 }
 
 .fa-envelope {
   /*background: #A31F34;*/
-  color: white;
+  color: #D22B2B;
 }
