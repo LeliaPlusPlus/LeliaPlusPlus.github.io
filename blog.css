@@ -64,6 +64,11 @@ body, html {
     color: #D22B2B;
 }
 
+.blogs a {
+    text-decoration: underline;
+    color: #D22B2B;
+}
+
 
 .social-media {
   display: block;
