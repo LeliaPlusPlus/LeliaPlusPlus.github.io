@@ -248,7 +248,7 @@ In this paradigm, a human gives demonstrations to a robot of a sample task and t
 In apprenticeship learning, the expert tries to maximize a reward function that is expressible as a linear combination of known features [<a href="#abbeel2004apprenticeship">1</a>]. 
 This allows us to  closely estimate the reward function of the expert. Let's see how this relates to IRL and how we can formulate apprenticeship cooperative inverse reinforcement learning (ACIRL).</p>
 	    
-<h4 id=""acirl"">Apprenticeship CIRL</h4>
+<h4 id="acirl">Apprenticeship CIRL</h4>
 <p>Since we have a human expert to demonstrate behavior, we can model apprenticeship learning as a two-phase CIRL game. The first phase is the learning phase where both <b>H</b> and <b>R</b> can take actions and this lets <b>R</b> learn about $\theta$. The second phase is the deployment phase where <b>R</b> acts independently and uses what it learned to maximize reward (without supervision from <b>H</b>).</p>
 	    
 <h4 id="learn">The Learning Phase</h4>
