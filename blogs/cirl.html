@@ -73,15 +73,15 @@ MathJax = {
 
       </li>
       <li> <a href="#cirlform">CIRL Formulation</a>
-		<ul><li><a href="#optpol">Optimal Policy Pair</a><li></ul>
+		<ul><li><a href="#optpol">Optimal Policy Pair</a></li></ul>
       </li>
       <li> <a href="#suffstat">Sufficient Statistics</a>
 
       </li>
       <li> <a href="#apprent">Apprenticeship Learning: A Subclass of CIRL Games</a>
 		<ul><li><a href="#acirl">Apprenticeship CIRL</a><li>
-		    li><a href="#learn">The Learning Phase</a><li>
-		    li><a href="#deploy">The Deployment Phase</a><li>
+		    <li><a href="#learn">The Learning Phase</a><li>
+		    <li><a href="#deploy">The Deployment Phase</a><li>
 		</ul>
       </li>
       <li> <a href="#irllimit">Limitations of IRL</a>
@@ -152,6 +152,7 @@ Thus, the utility of a policy $\pi$ is linear in the reward function.</p>
 <p>In many instances, it is challenging to specify an explicit reward function \cite{abbeel2010inverse}. There may be various variables to trade-off in the reward function which can make the reward function burdensome to determine \cite{abbeel2010inverse}. 
 Enter inverse reinforcement learning. Can we use inspiration from the ways in which humans and animals learn? Well, we know that humans and animals rarely know a reward function. Rather, they discover a reward function through observation, especially for multiattribute reward functions. To that end, inverse RL algorithms efficiently extract a reward function from (nearly) optimal behavior of an expert who demonstrates the task(s) at hand. As Pieter Abbeel and Andrew Y. Ng elegantly put it, inverse RL algorithms "exploit the fact that an expert demonstration implicitly encodes the reward function of the task at hand" \cite{abbeel2010inverse}. As an example, the reward function for baking might be a function of the right amount of each ingredient, baking time, amount of moisture in the dessert, and so on. If baking with a young child who does not know how to bake, the child would eventually learn that the reward is a baked dessert that requires a delicate balance of the aforementioned variables involved but not necessarily because you told them that. Rather, they can observe you bake over time, and they will eventually learn how to properly bake a delicious dessert.</p>
 </div>
+		    
 <div="irlsol">		    
 <h2>Inverse RL Solution Set</h2>
 <p>A reward function $R$ is consistent with the optimal policy $\pi^{\ast}$ if and only if the utility obtained when acting according to the policy $\pi^{\ast}$ is at least as high as the utility obtained when acting according to any other policy $\pi$, or equivalently,
@@ -160,6 +161,7 @@ $$U(\pi^{\ast}) \geq U(\pi), \forall \pi \in \Pi$$</p>
 <p>Since the utility of a policy $U(\pi)=R^T \mu_S(\pi)$ is linear in the reward function, we can rewrite the above as a set of linear constraints on the reward function $R$:
 $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 </div>
+		    
 <div id="irlconsid">		    
 <h2>Considerations for IRL</h2>
 <p><b>Reward Function Ambiguity</b>: As demonstrated above, there are many reward functions that satisfy the optimal policy constraints. For example, we could use the all-zeros reward function which is consistent with any policy being optimal. However, this would be a terrible reward function. So we have to think about how to recover reward functions that are of interest to the inverse RL problem \cite{abbeel2010inverse}.</p>
@@ -168,10 +170,12 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 
 <p><b>Computational Efficiency:</b> The number of constraints grows quickly with the number of states and actions of the MDP which quickly becomes impractical.</p>
 </div>
+		    
 <div id="cirl">		    
 <h2>Cooperative Inverse Reinforcement Learning</h2>
 <p>Cooperative inverse reinforcement learning (CIRL) is a formal approach to the value alignment problem \cite{hadfield2016cooperative, malik2018efficient}. A CIRL problem is a cooperative, partial-information game with two agents, human and robot. Both are rewarded according to the human’s reward function, but the robot does not initially know what this is.</p>
 </div>
+		    
 <div id="valalign">		    
 <h3>The Value Alignment Problem</h3>
 <p>The high-level goals of value alignment for an autonomous AI system are two-fold: we want agents' actions to contribute to the maximization of value for humans and pose no unwarranted risks \cite{hadfield2016cooperative}. The value alignment problem is an interesting one because of this notion of autonomy. As Norbert Wiener pointed out in 1960, "If we use, to achieve our purposes, a mechanical agency with whose operation we cannot interfere effectively...we had better be quite sure that the purpose put into the machine is the purpose which we really desire" \cite{wiener1960some}.</p>
@@ -186,6 +190,7 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 
 <p>Long story short: Autonomous systems should augment, complement, and enhance to human experience. Developers must take care to mitigate unwarranted risks and ensure proper specifications of both means and outcomes.</p>
 </div>
+		    
 <div id="irlext">		    
 <h3>Extension of IRL to Value Alignment</h3>
 <p>On the surface, IRL seems to provide a simple solution to the value alignment problem: "the robot observes human behavior, learns the human reward function, and behaves according to that function" \cite{hadfield2016cooperative}. However, IRL has two immediate limitations in this scenario.</p>
@@ -200,10 +205,12 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 
 <p>More precisely, we can define a cooperative inverse reinforcement learning (CIRL) game as a two-player game of partial information, in which the “human”, <b>H</b>, knows the the parameters $\theta$ of reward function, while the “robot”, <b>R</b>, does not; the robot’s payoff is exactly the human’s actual reward \cite{hadfield2016cooperative}. Optimal solutions to this game maximize human reward, and can involve active instruction by the human and active learning by the robot.</p>
 </div>
+		    
 <div id="markovgame">		    
 <h3>A Two-Player Markov Game</h3>
 <p>Let $(\pi_H,\pi_R)$ be a pair of policies for human and robot. Each depend on the complete history of observations and actions. A policy pair yields an expected sum of rewards for each player. In the case of the CIRL game described herein, there is a unique, well-defined optimal policy pair that maximizes value. We can compute an optimal policy pair by solving a (single-agent) partially-observable Markov decision process (POMDP).</p>
 </div>
+		    
 <div id="pomdp">		    
 <h3>A Partially-Observable Markov Decision Process</h3>
 <p>As demonstrated with MDPs, if we can fully observe the state and action space, we can come up with a set of policies that satisfy the optimal policy constraints. Then, we can design a straightforward policy because we know how to maximize our rewards since we know all the transition probabilities. Of course, there will still be computational efficiency and reward function specification considerations. However, there are times where we must make decisions under uncertainty because we cannot directly observe the environment's true state. That is, the agent does not directly observe the environment's state. In fact, the real world is much like this. Enter the partially-observable Markov decision process (POMDP).</p>
@@ -212,6 +219,7 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 
 <p>After taking an action $a$ and receiving an observation $o$, the agent must update its belief, that is, its best guess of the state the environment is in. In our Markovian model, maintaining a belief over the states only requires knowledge of the previous belief state $b_{t-1}$, the action taken $a_t$, and the current observation $o_t$.</p>
 </div>
+		    
 <div id="cirlform">		    
 <h3>CIRL Formulation</h3>
 <p>A cooperative inverse reinforcement learning (CIRL) game $M$ is a two-player Markov game with identical payoffs between a human or principal, $H$, and a robot or agent, $R$. The game is described by a tuple $M=(S, \{A^H, A^R\}, T, \{\Theta, R\}, P_0, \gamma)$ where
