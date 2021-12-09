@@ -133,7 +133,7 @@ The general concept of reinforcement learning (RL) is that an agent or set of ag
 <div ="policy">		    
 <h3>Policy Iteration</h3>
 <p>A policy $\pi$ is a mapping from states to probability distributions over actions. We want the policy that will maximize our reward function. We know that the better the agent does the higher the reward. How do we do this?</p>
-<
+
 <p>As mentioned above, we have a set of states and a set of actions. The set of all possible states spans the state space for an agent, and the set of all actions spans the action space for an agent. Since an action can update the state of an agent, recall that we can use the state-transition matrix $P_{sa}$ to specify the probability of transition from one state to another. That is, given the agent is in a certain state and then takes a certain action, what is the probability of updating the state to any of those in our set of actions? For example, given the state of hunger and then the action of eating dinner, we can characterize the probability that we eat breakfast, lunch, dinner, or dessert. Since we just ate dinner, everything else will be disincentivized, so we may want to eat a dessert. Based on this knowledge, we can define a policy that comprises the suggested actions that the agent should take for every possible state $s\in S$.</p>
 
 <p>Let's define a random state sequence $s_0,s_1,s_2...$ drawn by starting from a state $s_0 \sim D$ and picking actions according to $\pi$. Then the utility of a policy $\pi$ is given by the expected sum of discounted rewards under our policy:
