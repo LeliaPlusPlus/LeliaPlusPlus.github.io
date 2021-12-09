@@ -52,11 +52,11 @@ A Markov decision process can be formulated as a discrete-time stochastic contro
 A Markov decision process (MDP) contains:
 <ul>
 <li>a finite set of states $S$</li>
--a set of actions $A$ an agent can take in an environment</li>
--a set of state-transition probabilities $T=\{ P_{sa}\}$ where $P_{sa}$ is the state transition distribution upon taking action $a$ in state $s$</li>
--the distribution over states for time zero $D$</li>
--a discount factor $\gamma \in [0,1)$</li>
--the reward function $R:S \mapsto \mathbb{R}$</li>
+<li>a set of actions $A$ an agent can take in an environment</li>
+<li>a set of state-transition probabilities $T=\{ P_{sa}\}$ where $P_{sa}$ is the state transition distribution upon taking action $a$ in state $s$</li>
+<li>the distribution over states for time zero $D$</li>
+<li>a discount factor $\gamma \in [0,1)$</li>
+<li>the reward function $R:S \mapsto \mathbb{R}$</li>
 </ul>
 		    
 That is, an agent starts in a state, then takes an action, then receives an award commensurate to the action taken in the given state, and then the state will change again based on the action. By the end of this process, we should have some cumulative reward. Our reward function inputs a state and outputs a real-valued reward value based on the agent's action. Thus, the reward function incentivizes ideal states over less desirable states. We use a discount on the reward to reflect how much importance the agent should put on distant future rewards compared to immediate rewards. The closer $\gamma$ is to 0, the more the agent cares about maximizing the expected sum of immediate rewards; the closer $\gamma$ is to 1, the more the agent cares about maximizing the expected sum of future rewards. 
@@ -113,7 +113,7 @@ Long story short: Autonomous systems should augment, complement, and enhance to 
 <h3>Extension of IRL to Value Alignment</h3>
 On the surface, IRL seems to provide a simple solution to the value alignment problem: "the robot observes human behavior, learns the human reward function, and behaves according to that function" \cite{hadfield2016cooperative}. However, IRL has two immediate limitations in this scenario.
 
-The first limitation is that the robot should not necessarily adopt the human's reward function as its <i>own<\i>. For example, many humans generally drink coffee in the morning, but we would not a robot to imitate this because this very hot liquid will destroy them. There is an easy approach to this: the robot must always have a fixed objective of optimizing reward <i>for</i> the human and continuously improve at learning the human reward function.
+The first limitation is that the robot should not necessarily adopt the human's reward function as its <i>own</i>. For example, many humans generally drink coffee in the morning, but we would not a robot to imitate this because this very hot liquid will destroy them. There is an easy approach to this: the robot must always have a fixed objective of optimizing reward <i>for</i> the human and continuously improve at learning the human reward function.
 
 The second limitation is less apparent and much harder to address. IRL assumes that observed behavior is optimal if it accomplishes a given task efficiently. However, this eliminates the possibility for a variety of useful teaching behaviors that incentivize more interactive ways of learning. 
 
@@ -135,17 +135,19 @@ After taking an action $a$ and receiving an observation $o$, the agent must upda
 
 <h3>CIRL Formulation</h3>
 A cooperative inverse reinforcement learning (CIRL) game $M$ is a two-player Markov game with identical payoffs between a human or principal, $H$, and a robot or agent, $R$. The game is described by a tuple $M=(S, \{A^H, A^R\}, T, \{\Theta, R\}, P_0, \gamma)$ where
--$S$ is a set of world states with $s \in S$
--$A^H$ is a set of actions for $H$ with $a^H \in A^H$
--$A^R$ is a set of actions for $R$ with $a^R \in A^R$
--$T$ is a conditional distribution on the next world state, given previous state and action for both agents with $T(s'|a^H,a^R,s)$
--$\Theta$ is a set of possible static reward parameters, only observed by $H$ with $\theta in \Theta$
--$R$ is a parameterized reward function that maps world states, joint actions, and reward parameters to real numbers. That is, $R:S \times A^H \times A^R \times \Theta \mapsto \mathbb{R}$.
-- $P_0$ is a distribution over the initial state, represented as tuples $P_0(s_0, \theta)$
--$O_A^{H}$ is a set of conditional observation probabilities based on the set of actions that <b>H</b> has observed <b>R</b> take  
--$O_A^{R}$ is a set of conditional observation probabilities based on the set of actions that <b>R</b> has observed <b>H</b> take
-- $\gamma$ is a discount factor $\gamma \in [0,1]$
-
+<ul>
+<li>$S$ is a set of world states with $s \in S$</li>
+<li>$A^H$ is a set of actions for $H$ with $a^H \in A^H$</li>
+<li>$A^R$ is a set of actions for $R$ with $a^R \in A^R$</li>
+<li>$T$ is a conditional distribution on the next world state, given previous state and action for both agents with $T(s'|a^H,a^R,s)$</li>
+<li>$\Theta$ is a set of possible static reward parameters, only observed by $H$ with $\theta in \Theta$</li>
+<li>$R$ is a parameterized reward function that maps world states, joint actions, and reward parameters to real numbers. That is, $R:S \times A^H \times A^R \times \Theta \mapsto \mathbb{R}$.</li>
+<li>$P_0$ is a distribution over the initial state, represented as tuples $P_0(s_0, \theta)$</li>
+<li>$O_A^{H}$ is a set of conditional observation probabilities based on the set of actions that <b>H</b> has observed <b>R</b> take</li>  
+<li>$O_A^{R}$ is a set of conditional observation probabilities based on the set of actions that <b>R</b> has observed <b>H</b> take</li>
+<li>$\gamma$ is a discount factor $\gamma \in [0,1]$</li>
+</ul>
+		    
 Note that there is a static reward for parameters $\theta$ related to the dynamic world state $s$, and then there is a reward for a state–parameter pair $R(s,a^H,a^R;\theta)$.
 
 Here's how the game works: We sample an initial state tuple from $P_0$. <b>H</b> observes $\theta$ but <b>R</b> does not because only the human knows the reward function while both actors know a prior distribution over possible reward functions \cite{hadfield2016cooperative}. At each timestep $t$, <b>H</b> and <b>R</b> observe the current state $s_t$, and then choose their actions $a^H_t,a^R_t$. Both actors share the same reward $r_t=R(s,a^H,a^R;\theta)$ and observe each other's action selection. A state for the next timestep is sampled from the transition distribution $s_{t+1} \sim P_T(s'|s_t,a^H_t,a^R_t)$. Then the process repeats. Note that sharing the same reward function incentivizes the human to teach and the robot to learn without explicitly encoding these as objectives of the actors. \cite{hadfield2016cooperative}
