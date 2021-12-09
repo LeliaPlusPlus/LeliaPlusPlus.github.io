@@ -102,20 +102,16 @@ MathJax = {
 
   </li>
 </ul>
-
-<div id="intro">	
-<h2>Introduction</h2>
+	
+<h2 id="intro">Introduction</h2>
 <p>Today, we will go over an approach to the value alignment problem in AI Safety called <i>cooperative inverse reinforcement learning</i>. The high-level idea is that we can teach agents to learn from "expert" human behavior in order to have them be more helpful to humans and mitigate risks. First, we will go over some fundamentals of reinforcement learning relevant to our topic, then we will discuss the foundations of inverse reinforcement learning, and lastly we will dive into cooperative inverse reinforcement learning.</p> 
 
 <p>Note: This is not an introductory RL blog. If you wish to learn more about the basics of RL, some resources are <a href="https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html">A (Long) Peek Into RL</a>, <a href="https://www.youtube.com/watch?v=nZfaHIxDD5w&list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI&index=17">Deep Reinforcement Learning</a>, <a href="https://web.stanford.edu/class/cs234/#course_schedule">CS234: Reinforcement Learning Winter 2021</a> and <a href="http://rail.eecs.berkeley.edu/deeprlcourse-fa19/">CS 285 Deep Reinforcement Learning</a>.</p>
-</div>
 
-<div id="rl">
-<h2>Reinforcement Learning</h2>
+<h2 id="rl">Reinforcement Learning</h2>
 The general concept of reinforcement learning (RL) is that an agent or set of agents interacts with its environment and learns to maximize some reward function. We care about reinforcement learning in AI safety because properly executing RL is a key part of safe autonomous systems of which RL is the modern foundation. Moreover, RL allows us to create simulations for desired behavior. In terms of cooperative inverse reinforcement learning, RL can allow autonomous agents to learn reward functions from humans in the hopes of achieving value alignment as well as training agents that are helpful and not harmful to humans. 
-</div>
-<div id="mdp">
-<h3>Markov Decision Processes</h3>
+
+<h3 id="mdp">Markov Decision Processes</h3>
 <p>A Markov decision process can be formulated as a discrete-time stochastic control process that allows us to model decision making where the outcomes are partially random and partially the result of a decision making agent. In this case, our stochastic process has a conditional probability distribution of future states of the process (conditional on both past and present values) that depend only upon the present state. In other words, the Markov property states can be simplified to "given the present, the future does not depend on the past". </p>
 
 <p>A Markov decision process (MDP) contains:
@@ -129,9 +125,8 @@ The general concept of reinforcement learning (RL) is that an agent or set of ag
 </ul></p>
 		    
 <p>That is, an agent starts in a state, then takes an action, then receives an award commensurate to the action taken in the given state, and then the state will change again based on the action. By the end of this process, we should have some cumulative reward. Our reward function inputs a state and outputs a real-valued reward value based on the agent's action. Thus, the reward function incentivizes ideal states over less desirable states. We use a discount on the reward to reflect how much importance the agent should put on distant future rewards compared to immediate rewards. The closer $\gamma$ is to 0, the more the agent cares about maximizing the expected sum of immediate rewards; the closer $\gamma$ is to 1, the more the agent cares about maximizing the expected sum of future rewards.</p>
-</div>
-<div ="policy">		    
-<h3>Policy Iteration</h3>
+	    
+<h3 id="policy">Policy Iteration</h3>
 <p>A policy $\pi$ is a mapping from states to probability distributions over actions. We want the policy that will maximize our reward function. We know that the better the agent does the higher the reward. How do we do this?</p>
 
 <p>As mentioned above, we have a set of states and a set of actions. The set of all possible states spans the state space for an agent, and the set of all actions spans the action space for an agent. Since an action can update the state of an agent, recall that we can use the state-transition matrix $P_{sa}$ to specify the probability of transition from one state to another. That is, given the agent is in a certain state and then takes a certain action, what is the probability of updating the state to any of those in our set of actions? For example, given the state of hunger and then the action of eating dinner, we can characterize the probability that we eat breakfast, lunch, dinner, or dessert. Since we just ate dinner, everything else will be disincentivized, so we may want to eat a dessert. Based on this knowledge, we can define a policy that comprises the suggested actions that the agent should take for every possible state $s\in S$.</p>
@@ -143,41 +138,31 @@ $$U(\pi)=\mathbb{E}[\ \sum_{t=0}^{\infty} \gamma^{t} R(s_{t}) | \pi]\ $$</p>
 <br>Then, we can rewrite the utility of the policy as: 
 $$U(\pi)=R^T \mu_S(\pi)$$
 Thus, the utility of a policy $\pi$ is linear in the reward function.</p>
-</div>
-
-<div id="irl">		    
-<h2>Inverse Reinforcement Learning</h2>
+	    
+<h2 id="irl">Inverse Reinforcement Learning</h2>
 <p><i> “Given measurements of an [actor]’s behavior over time. . . . Determine the reward function being optimized.” \cite{ng2000algorithms} </i></p>
 
 <p>In many instances, it is challenging to specify an explicit reward function \cite{abbeel2010inverse}. There may be various variables to trade-off in the reward function which can make the reward function burdensome to determine \cite{abbeel2010inverse}. 
 Enter inverse reinforcement learning. Can we use inspiration from the ways in which humans and animals learn? Well, we know that humans and animals rarely know a reward function. Rather, they discover a reward function through observation, especially for multiattribute reward functions. To that end, inverse RL algorithms efficiently extract a reward function from (nearly) optimal behavior of an expert who demonstrates the task(s) at hand. As Pieter Abbeel and Andrew Y. Ng elegantly put it, inverse RL algorithms "exploit the fact that an expert demonstration implicitly encodes the reward function of the task at hand" \cite{abbeel2010inverse}. As an example, the reward function for baking might be a function of the right amount of each ingredient, baking time, amount of moisture in the dessert, and so on. If baking with a young child who does not know how to bake, the child would eventually learn that the reward is a baked dessert that requires a delicate balance of the aforementioned variables involved but not necessarily because you told them that. Rather, they can observe you bake over time, and they will eventually learn how to properly bake a delicious dessert.</p>
-</div>
-		    
-<div="irlsol">		    
-<h2>Inverse RL Solution Set</h2>
+	    
+<h2 id=""irlsol"">Inverse RL Solution Set</h2>
 <p>A reward function $R$ is consistent with the optimal policy $\pi^{\ast}$ if and only if the utility obtained when acting according to the policy $\pi^{\ast}$ is at least as high as the utility obtained when acting according to any other policy $\pi$, or equivalently,
 $$U(\pi^{\ast}) \geq U(\pi), \forall \pi \in \Pi$$</p>
 
 <p>Since the utility of a policy $U(\pi)=R^T \mu_S(\pi)$ is linear in the reward function, we can rewrite the above as a set of linear constraints on the reward function $R$:
 $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
-</div>
-		    
-<div id="irlconsid">		    
-<h2>Considerations for IRL</h2>
+	    
+<h2 id="irlconsid">Considerations for IRL</h2>
 <p><b>Reward Function Ambiguity</b>: As demonstrated above, there are many reward functions that satisfy the optimal policy constraints. For example, we could use the all-zeros reward function which is consistent with any policy being optimal. However, this would be a terrible reward function. So we have to think about how to recover reward functions that are of interest to the inverse RL problem \cite{abbeel2010inverse}.</p>
 
 <p><b>Statistical Efficiency:</b> Since we often have an extremely large or infinite state space, we do not have a sufficient amount of expert demonstrations to accurately estimate the discounted distribution over states. Thus, the inverse RL approach relies on having a reward function that can be estimated efficiently from data.</p>
 
 <p><b>Computational Efficiency:</b> The number of constraints grows quickly with the number of states and actions of the MDP which quickly becomes impractical.</p>
-</div>
-		    
-<div id="cirl">		    
-<h2>Cooperative Inverse Reinforcement Learning</h2>
+	    
+<h2 id="cirl">Cooperative Inverse Reinforcement Learning</h2>
 <p>Cooperative inverse reinforcement learning (CIRL) is a formal approach to the value alignment problem \cite{hadfield2016cooperative, malik2018efficient}. A CIRL problem is a cooperative, partial-information game with two agents, human and robot. Both are rewarded according to the human’s reward function, but the robot does not initially know what this is.</p>
-</div>
 		    
-<div id="valalign">		    
-<h3>The Value Alignment Problem</h3>
+<h3 id="valalign">The Value Alignment Problem</h3>
 <p>The high-level goals of value alignment for an autonomous AI system are two-fold: we want agents' actions to contribute to the maximization of value for humans and pose no unwarranted risks \cite{hadfield2016cooperative}. The value alignment problem is an interesting one because of this notion of autonomy. As Norbert Wiener pointed out in 1960, "If we use, to achieve our purposes, a mechanical agency with whose operation we cannot interfere effectively...we had better be quite sure that the purpose put into the machine is the purpose which we really desire" \cite{wiener1960some}.</p>
 
 <p>If a machine learning algorithm receives press for misclassifying a certain demographic, machine learning engineers can intervene and inject some code to address it. A company might even decide to take it offline as some companies have. However, this is not necessarily the case for autonomous technology. If a superintelligent robot becomes a killer robot and then creates its own firewalls to prevent any engineers from wirelessly altering its code or shutting it down, then how can we intervene in the same way as the aforementioned ML algorithm? Of course, there's also an issues of security. For example, a terrorist organization could hack into an AI-enabled military drone and wreak havoc, which is one of the many reasons why autonomous weapons should not exist but I digress.</p>
@@ -189,10 +174,8 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 <p>In fact, humans can also fail to consider the means to the end. For example, you could instruct a robot to make sure you never have to clean your house again, and then they could destroy your house to fulfill your wishes.</p> 
 
 <p>Long story short: Autonomous systems should augment, complement, and enhance to human experience. Developers must take care to mitigate unwarranted risks and ensure proper specifications of both means and outcomes.</p>
-</div>
-		    
-<div id="irlext">		    
-<h3>Extension of IRL to Value Alignment</h3>
+	    
+<h3 id="irlext">Extension of IRL to Value Alignment</h3>
 <p>On the surface, IRL seems to provide a simple solution to the value alignment problem: "the robot observes human behavior, learns the human reward function, and behaves according to that function" \cite{hadfield2016cooperative}. However, IRL has two immediate limitations in this scenario.</p>
 
 <p>The first limitation is that the robot should not necessarily adopt the human's reward function as its <i>own</i>. For example, many humans generally drink coffee in the morning, but we would not a robot to imitate this because this very hot liquid will destroy them. There is an easy approach to this: the robot must always have a fixed objective of optimizing reward <i>for</i> the human and continuously improve at learning the human reward function.</p>
@@ -204,24 +187,18 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 <p>However, these approaches do not fit into the standard IRL framework. Enter cooperative inverse reinforcement learning (CIRL). Rather than the IRL assumption in which the robot passively observes the human and the human acts in isolation without considering the robot learning their behavior, CIRL relaxes these two assumptions by having human and the robot on the same team, collaborating to achieve the same goal \cite{malik2018efficient}. This allows value alignment to be formulated as a process of cooperative and interactive reward maximization. In fact, the CIRL formulations involves both taking actions and both having the same reward function.</p>
 
 <p>More precisely, we can define a cooperative inverse reinforcement learning (CIRL) game as a two-player game of partial information, in which the “human”, <b>H</b>, knows the the parameters $\theta$ of reward function, while the “robot”, <b>R</b>, does not; the robot’s payoff is exactly the human’s actual reward \cite{hadfield2016cooperative}. Optimal solutions to this game maximize human reward, and can involve active instruction by the human and active learning by the robot.</p>
-</div>
-		    
-<div id="markovgame">		    
-<h3>A Two-Player Markov Game</h3>
+		    	    
+<h3 id="markovgame">A Two-Player Markov Game</h3>
 <p>Let $(\pi_H,\pi_R)$ be a pair of policies for human and robot. Each depend on the complete history of observations and actions. A policy pair yields an expected sum of rewards for each player. In the case of the CIRL game described herein, there is a unique, well-defined optimal policy pair that maximizes value. We can compute an optimal policy pair by solving a (single-agent) partially-observable Markov decision process (POMDP).</p>
-</div>
-		    
-<div id="pomdp">		    
-<h3>A Partially-Observable Markov Decision Process</h3>
+		    	    
+<h3 id="pomdp">A Partially-Observable Markov Decision Process</h3>
 <p>As demonstrated with MDPs, if we can fully observe the state and action space, we can come up with a set of policies that satisfy the optimal policy constraints. Then, we can design a straightforward policy because we know how to maximize our rewards since we know all the transition probabilities. Of course, there will still be computational efficiency and reward function specification considerations. However, there are times where we must make decisions under uncertainty because we cannot directly observe the environment's true state. That is, the agent does not directly observe the environment's state. In fact, the real world is much like this. Enter the partially-observable Markov decision process (POMDP).</p>
 
 <p>A discrete-time POMDP models the relationship between an agent and its environment. Formally, a POMDP is a 7-tuple $(S,A,T,R,\Omega,O,\gamma)$, where $\Omega$ is a set of observations and $O$ is a set of conditional observation probabilities. At each time period, the environment is in some state $s \in S$. The agent takes an action $a \in A$, resulting in the environment transition to state $s'$ with probability $P(s'|s,a)$. In this new state $s'$, the agent receives an observation $o \in \Omega$ based on the action they took with probability $O(o|s',a)$. The agent receives a reward, and then the process repeats. As in MDP, the goal of the agent is to maximize its expected sum of discounted rewards. As a consequence of not being able to directly observe the state, the optimal behavior may involve actions that improve the agent's estimate of the current state, e.g., information gathering.</p> 
 
 <p>After taking an action $a$ and receiving an observation $o$, the agent must update its belief, that is, its best guess of the state the environment is in. In our Markovian model, maintaining a belief over the states only requires knowledge of the previous belief state $b_{t-1}$, the action taken $a_t$, and the current observation $o_t$.</p>
-</div>
-		    
-<div id="cirlform">		    
-<h3>CIRL Formulation</h3>
+		    	    
+<h3 id="cirlform">CIRL Formulation</h3>
 <p>A cooperative inverse reinforcement learning (CIRL) game $M$ is a two-player Markov game with identical payoffs between a human or principal, $H$, and a robot or agent, $R$. The game is described by a tuple $M=(S, \{A^H, A^R\}, T, \{\Theta, R\}, P_0, \gamma)$ where
 <ul>
 <li>$S$ is a set of world states with $s \in S$</li>
@@ -239,9 +216,8 @@ $$R^T \mu_S(\pi^{\ast}) \geq R^T \mu_S(\pi), \forall \pi \in \Pi$$</p>
 <p>Note that there is a static reward for parameters $\theta$ related to the dynamic world state $s$, and then there is a reward for a state–parameter pair $R(s,a^H,a^R;\theta)$.</p>
 
 <p>Here's how the game works: We sample an initial state tuple from $P_0$. <b>H</b> observes $\theta$ but <b>R</b> does not because only the human knows the reward function while both actors know a prior distribution over possible reward functions \cite{hadfield2016cooperative}. At each timestep $t$, <b>H</b> and <b>R</b> observe the current state $s_t$, and then choose their actions $a^H_t,a^R_t$. Both actors share the same reward $r_t=R(s,a^H,a^R;\theta)$ and observe each other's action selection. A state for the next timestep is sampled from the transition distribution $s_{t+1} \sim P_T(s'|s_t,a^H_t,a^R_t)$. Then the process repeats. Note that sharing the same reward function incentivizes the human to teach and the robot to learn without explicitly encoding these as objectives of the actors. \cite{hadfield2016cooperative}</p>
-</div>
-<div id="optpol">		    
-<h4>The Optimal Policy Pair</h4>
+	    
+<h4 id="optpol">The Optimal Policy Pair</h4>
 <p>Of course, we need a policy to determine which actions the actors should take. In a CIRL game, a policy pair $(\pi^H,\pi^R)$ determine action selection for <b>H</b> and <b>R</b> respectively. We can define the policies to be arbitrary functions of their observation histories:
 $$\pi^H: [O_A^H \times O_A^R \times S]^{\ast} \times \Theta \mapsto A^H$$
 $$\pi^R: [O_A^H \times O_A^R \times S]^{\ast} \mapsto A^R$$</p>
@@ -249,37 +225,31 @@ $$\pi^R: [O_A^H \times O_A^R \times S]^{\ast} \mapsto A^R$$</p>
 <p>You'll notice we multiply $\pi^H$ by $\Theta$ since <b>H<\b> can observe the parameters. As always, we want the optimal joint policy that maximizes <i>value</i>. We define the value of a state to be the expected sum of discounted rewards under the initial distribution of reward parameters and world states $\mathbb{E}[ \sum_{t=0}^{\infty} \gamma^{t} r_t|P_0(s_0, \theta)]$.</p> 
 
 <p>For an MDP, we want to compute an optimal policy, but in a CIRL game we want to compute an optimal policy <i>pair</i>. That is, the pair of policies that maximize our expected sum of discounted rewards. However, the policy only tells us which actions we should take, but we want to account for coordination problems and strategic uncertainty in the context of a real world implementation. Thus, computing the optimal policy pair is not the same as 'solving' a CIRL game. What the optimal policy pair tells us is the best <b>H</b> and <b>R</b> can do if they can coordinate perfectly before <b>H</b> observes $\theta$.</p>
-</div>
-<div id="suffstat">		    
-<h3>Sufficient Statistics</h3>
+	    
+<h3 id="suffstat">Sufficient Statistics</h3>
 <p>Formulating an optimal policy pair as the solution of a (single-agent) POMDP shows that the robot’s posterior over $\theta$ is a sufficient statistic, in the sense that there are optimal policy pairs in which the robot’s behavior depends only on this statistic \cite{hadfield2016cooperative}.</p>
-</div>
-<div id="apprent">		    
-<h3>Apprenticeship Learning: A Subclass of CIRL Games</h3>
+	    
+<h3 id="apprent">Apprenticeship Learning: A Subclass of CIRL Games</h3>
 <p>Recall that inverse reinforcement learning involves learning a reward function by observing a behavior. However, this behavior can be anybody's behavior. Why don't we get an expert? Enter apprenticeship learning \cite{abbeel2004apprenticeship}. Apprenticeship learning via IRL allows an agent to learn the desired task through expert demonstrations. Therefore, apprenticeship learning can allow robots to learn from humans. In this paradigm, a human gives demonstrations to a robot of a sample task and the robot must imitate it in a subsequent task \cite{hadfield2016cooperative}. In apprenticeship learning, the expert tries to maximize a reward function that is expressible as a linear combination of known features \cite{abbeel2004apprenticeship}. This allows us to  closely estimate the reward function of the expert. Let's see how this relates to IRL and how we can formulate apprenticeship cooperative inverse reinforcement learning (ACIRL).</p>
-</div>
-<div="acirl">		    
-<h4>Apprenticeship CIRL</h4>
+	    
+<h4 id=""acirl"">Apprenticeship CIRL</h4>
 <p>Since we have a human expert to demonstrate behavior, we can model apprenticeship learning as a two-phase CIRL game. The first phase is the learning phase where both <b>H</b> and <b>R</b> can take actions and this lets <b>R</b> learn about $\theta$. The second phase is the deployment phase where <b>R</b> acts independently and uses what it learned to maximize reward (without supervision from <b>H</b>).</p>
-</div>
-<div id="learn">		    
-<h4>The Learning Phase</h4>
+	    
+<h4 id="learn">The Learning Phase</h4>
 <p>In general, apprenticeship learning assumes <i>demonstration-by-expert</i> (DBE). That is, <b>H</b> satisfies the DBE assumption in ACIRL if they greedily maximize immediate reward on their turn. In this setup, an ‘expert’ demonstration demonstrates a reward maximizing action but does not account for that action’s impact on R’s belief. $\pi^E$ represents the DBE policy. Given an optimal policy in the deployment phase and the DBE policy, how can we characterize the best response for <b>R</b> when $\pi^H=\pi^E$? Well, we can use IRL to compute the posterior over $\theta$ during the learning phase and then act to maximize reward under the mean $\theta$ in the deployment phase.</p>
 
 <p>Notably, under the DBE assumption, expert demonstrations are not optimal. $\pi^E$ is not <b>H</b>’s best response when $\pi^R$ is a best response to $\pi^E$. That is, there exist ACIRL games where the best-response for <b>H</b> to $\pi^R$ violates the expert demonstrator assumption.</p>
 
 <p>Coming back to our AI Safety theme, we must rigorously and thoughtfully consider our assumptions about the human demonstrator. We should expect experienced users of apprenticeship learning systems to present demonstrations optimized for fast learning rather than demonstrations that maximize reward \cite{hadfield2016cooperative}. That is, the human demonstrator does not think in terms of reward, but rather is incentivized to help the robot quickly pick up on desired behavior. Crucially, this means the demonstrator is incentivized to deviate from <b>R<b>’s assumptions. We absolutely <i>must</i> consider this in the design and analysis of apprenticeship systems in robotics in order to deploy safe systems in the world. Fortunately, discovering inaccurate assumptions about user behavior can expose bugs in our systems so that we can make them more robust.</p>
-</div>
-<div id="deploy">		    
-<h4>The Deployment Phase</h4>
+
+	    
+<h4 id="deploy">The Deployment Phase</h4>
 <p>In the deployment phase, <b>R</b> is the sole, independent actor so it gets no more observations of its reward. Even so, <b>R<\b>’s belief about $\theta$ is a sufficient statistic for the optimal policy. This belief about $\theta$ induces a distribution over MDPs. In the deployment phase of an ACIRL game, the optimal policy for <b>R<\b> maximizes reward in the MDP induced by the mean $\theta$ from <b>R<\b>’s belief. \cite{hadfield2016cooperative}</p>
-</div>
-<div id="irllimit">		    
-<h3>Limitations of IRL</h3>
+	    
+<h3 id="irllimit">Limitations of IRL</h3>
 <p>IRL is generally a suboptimal approach to apprenticeship learning because classic IRL falls out as the best-response policy for R under the assumption that the human’s policy is “demonstration by expert” (DBE), i.e., acting optimally in isolation as if no robot exists \cite{hadfield2016cooperative}. As demonstrated above, the DBE/IRL policy pair is not generally optimal because even if the robot expects expert behavior, demonstrating expert behavior is not the best way to teach that algorithm.</p>
-</div>
-<div id="demo">
-<h3>Generating Instructive Demonstrations</h3>
+
+<h3 id="demo">Generating Instructive Demonstrations</h3>
 <p>Consider the problem of computing H’s best response when R uses IRL as a state estimator. We can formulate this as an POMDP where the state is a tuple of world state, reward parameters, and <b>R</b>’s belief. However, this formulation is a computational challenge. To address this, we only consider the case of linear reward functions so that we can develop an efficient algorithm to compute an approximate best response.</p> 
 
 <p>Consider the case where the reward for a state $(s,\theta)$ is defined as a linear combination of state features for some feature function: $\phi \mapsto R(s,a^H,a^R,\theta) = \phi(s)^T \theta$. Fortunately, policies with the same expected feature counts have the same value \cite{abbeel2004apprenticeship}. Recall that <b>R</b>’s optimal deployment policy maximizes reward for the mean reward function based on its belief. Given this optimal deployment policy for <b>R</b> and our assumption of a linear reward, it is implied that the optimal $\pi^R$ under the DBE assumption computes a policy that matches the observed feature counts from the learning phase \cite{hadfield2016cooperative}.</p> 
@@ -288,22 +258,38 @@ $$\pi^R: [O_A^H \times O_A^R \times S]^{\ast} \mapsto A^R$$</p>
 $$\tau^H \leftarrow \mathrm{argmax}_{\tau} \phi(\tau)^{T}\theta-\eta \| \phi_{\theta} - \phi(\tau) \|^{2}$$</p>
 
 <p>This rule selects a trajectory that trades off between the sum of rewards $\phi(\tau)^{T}\theta$ and and the feature dissimilarity $\| \phi_{\theta} - \phi(\tau) \|^{2}$. Note that this is generally distinct from the action selected by the demonstration-by-expert policy. The goal is to match the expected sum of features under a distribution of trajectories with the sum of features from a single trajectory. The correct measure of feature similarity is regret: the difference between the reward <b>R</b> would collect if it knew the true $\theta$ and the reward <b>R</b> actually collects using the inferred $\theta$. Computing this similarity is expensive, so we use an $\ell_2$ norm as a proxy measure of similarity. \cite{hadfield2016cooperative}</p>
-</div>
-<div id="bellman">		    
-<h3>Optimality-Preserving Bellman Update</h3>
+	    
+<h3 id="bellman">Optimality-Preserving Bellman Update</h3>
 <p>As we have seen, a CIRL game can be reduced to a POMDP \cite{hadfield2016cooperative}. However, the action space in this POMDP is exponential in the size of the reward parameter space \cite{malik2018efficient}. Thus, it is challenging to solve non-trivial CIRL games with a POMDP. Even more so, solutions to CIRL are only optimal under the assumption that the human is optimal. Yet we know that humans are often sub-optimal in decision making. It is crucial to relax the assumptions of rationality. Particularly, it is important in safe RL because humans can be both rational and irrational agents, and our mechanisms to learn from humans, such as CIRL, ACIRL, active teaching/learning, and imitation learning, require us to take this into account so that robots do not mimic irrational behavior when it would be dangerous to do so and can learn from imperfect demonstrations.</p> 
 
 <p>To relax CIRL’s assumption of human rationality, we instead only require that the human’s policy be parameterized by their Q-values \cite{malik2018efficient}. Even more so, we can exploit the fact that the human is a full information agent in CIRL to derive an optimality-preserving modification of the standard Bellman update \cite{malik2018efficient}. This modified Bellman update reduces the complexity of the problem by an exponential factor, and can be applied to existing exact and approximate POMDP solvers \cite{malik2018efficient}.</p>
 
 <p>Would sub-optimality harm the robot's reward maximization? Apparently, if a human can take explicitly suboptimal actions that are better signals for the reward we wish to specify, the robot can attain higher value for the human because it can take advantage of these signals to learn faster. This suboptimality also makes our model more realistic. As Malik, Palaniappan, et al. put it: "POMDP is optimal only if H is perfectly rational, i.e., if H is guaranteed to always pick the optimal action. This is an unrealistic assumption: humans are not idealized rational agents." \cite{malik2018efficient}</p>
-</div>
-<div id="conclusion">
-<h2>Conclusion</h2>
+
+<h2 id="conclusion">Conclusion</h2>
 <p>Cooperative inverse reinforcement learning is one approach to the value alignment problem. It allows an agent, in this case a robot, to learn from a human. Since it is learning from the human, the hope is that the robot will do things that are useful for the human, thus aligning the robot with the human's values. Of course, we have seen that it is a little more complex than this, hence the challenge of value alignment in AI safety!</p> 
-</div>
-<div id="ref">		    
-<h2>References</h2>
-</div>		    
+	    
+<h2 id="ref">References</h2>
+[1] Pieter Abbeel and Andrew Y Ng. Apprenticeship learning via inverse rein-
+forcement learning. In Proceedings of the twenty-first international confer-
+ence on Machine learning, page 1, 2004.
+[2] Pieter Abbeel and Andrew Y Ng. Inverse reinforcement learning., 2010.
+[3] Dylan Hadfield-Menell, Stuart J Russell, Pieter Abbeel, and Anca Dragan.
+Cooperative inverse reinforcement learning. Advances in neural information
+processing systems, 29:3909–3917, 2016.
+[4] Dhruv Malik, Malayandi Palaniappan, Jaime Fisac, Dylan Hadfield-Menell,
+Stuart Russell, and Anca Dragan. An efficient, generalized bellman update
+for cooperative inverse reinforcement learning. In International Conference
+on Machine Learning, pages 3394–3402. PMLR, 2018.
+[5] Andrew Y Ng, Stuart J Russell, et al. Algorithms for inverse reinforcement
+learning. In ICML, volume 1, page 2, 2000.
+[6] Stuart Russell and Peter Norvig. Artificial Intelligence. Pearson, 2010.
+[7] Mary Shelley. Frankenstein. New York: Oxford, 1818.
+[8] Norbert Wiener. Some moral and technical consequences of automation.
+Science, 131(3410):1355–1358, 1960.
+[9] Langdon Winner. Frankenstein’s problem: Autonomous technology. Tech-
+nology and Values, pages 133–166, 1997.
+	    
    <div class = "social-media"> 
       <a href="https://scholar.google.com/citations?user=w08BihMAAAAJ&hl=en" target="_blank" class="ai ai-google-scholar"></a>    
       <a href="http://www.twitter.com/lelia_hampton" target="_blank" class="fa fa-twitter fa-lg"></a>
